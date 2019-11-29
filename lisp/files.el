@@ -6080,7 +6080,9 @@ This function binds `revert-buffer-in-progress-p' non-nil while it operates.
 This function calls the function that `revert-buffer-function' specifies
 to do the work, with arguments IGNORE-AUTO and NOCONFIRM.
 The default function runs the hooks `before-revert-hook' and
-`after-revert-hook'."
+`after-revert-hook', and if `revert-buffer-preserve-text-scale' is
+non-nil it also preserves any text-scaling that may be in effect
+because of `text-scale-mode'."
   ;; I admit it's odd to reverse the sense of the prefix argument, but
   ;; there is a lot of code out there that assumes that the first
   ;; argument should be t to avoid consulting the auto-save file, and
@@ -6147,6 +6149,8 @@ Non-file buffers need a custom function."
                ;; have changed the truename.
                (setq buffer-file-truename
                      (abbreviate-file-name (file-truename buffer-file-name)))
+               ;;; KFF: here is where to preserve `text-scale-mode'
+               ;;; and `text-scale-amount'.
                (after-find-file nil nil t nil revert-buffer-preserve-modes)
                ;; Run after-revert-hook as it was before we reverted.
                (setq-default revert-buffer-internal-hook global-hook)
